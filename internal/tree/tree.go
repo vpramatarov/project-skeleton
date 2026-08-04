@@ -54,7 +54,7 @@ func BuildTree(path string, filter Filter) (*Node, error) {
 	entries, err := os.ReadDir(path)
 	if err != nil {
 		// e.g. permission denied on this subdir - keep the node, just no children.
-		fmt.Printf("Error while reading %s: %v\n.", path, err)
+		fmt.Fprintf(os.Stderr, "Error while reading %s: %v\n.", path, err)
 		return node, nil
 	}
 
@@ -66,7 +66,7 @@ func BuildTree(path string, filter Filter) (*Node, error) {
 
 		child, err := BuildTree(filepath.Join(path, name), filter)
 		if err != nil {
-			fmt.Printf("Error while reading %s: %v\n.", filepath.Join(path, name), err)
+			fmt.Fprintf(os.Stderr, "Error while reading %s: %v\n.", filepath.Join(path, name), err)
 			continue
 		}
 
