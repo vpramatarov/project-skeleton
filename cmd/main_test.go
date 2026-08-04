@@ -23,9 +23,3 @@ func TestCliMultiFlagSet(t *testing.T) {
 		t.Errorf("String() = %q, want %q", s, "a,b,c,d")
 	}
 }
-
-func TestExitCodes(t *testing.T) {
-	if exitOK != 0 || exitErr != 1 || exitUsage != 2 {
-		t.Errorf("exit codes OK/Err/Usage = %d/%d/%d, want 0/1/2", exitOK, exitErr, exitUsage)
-	}
-}

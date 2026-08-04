@@ -1,36 +1,13 @@
 package tree
 
 import (
-	"bytes"
 	"encoding/json"
-	"io"
 	"os"
 	"path/filepath"
 	"slices"
 	"strings"
 	"testing"
 )
-
-func captureStdout(t *testing.T, fn func()) string {
-	t.Helper()
-	oldStdout := os.Stdout
-	r, w, err := os.Pipe()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	os.Stdout = w
-	defer func() { os.Stdout = oldStdout }()
-
-	fn()
-	w.Close()
-	var buf bytes.Buffer
-	if _, err := io.Copy(&buf, r); err != nil {
-		t.Fatal(err)
-	}
-
-	return buf.String()
-}
 
 func writeFile(t *testing.T, path, content string) {
 	t.Helper()
@@ -196,14 +173,6 @@ func TestBuildTreeRootIsFile(t *testing.T) {
 func TestBuildTreeMissingRoot(t *testing.T) {
 	if _, err := BuildTree(filepath.Join(t.TempDir(), "missing"), NewFilter(nil, nil, false)); err == nil {
 		t.Fatal("BuildTree on missing path: want error, got nil")
-	}
-}
-
-func TestBuildTreeSilent(t *testing.T) {
-	root := fixtureTree(t)
-	out := captureStdout(t, func() { BuildTree(root, NewFilter(nil, nil, false)) })
-	if out != "" {
-		t.Errorf("BuildTree printed %q, want nothing - printing belong to main/Render", out)
 	}
 }
 

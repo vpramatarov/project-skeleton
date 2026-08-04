@@ -1,7 +1,7 @@
 package tree
 
 import (
-	"os"
+	"strings"
 	"testing"
 )
 
@@ -30,18 +30,20 @@ func renderFixture() *Node {
 }
 
 func TestRenderUnicode(t *testing.T) {
-	out := captureStdout(t, func() { Render(os.Stdout, renderFixture(), "", Unicode) })
+	var sb strings.Builder
+	Render(&sb, renderFixture(), "", Unicode)
 	want := "├── dir/\n│   └── file.txt\n├── a.txt\n└── link -> target\n"
-	if out != want {
-		t.Errorf("got:\n%s\nwant:\n%s", out, want)
+	if sb.String() != want {
+		t.Errorf("got:\n%s\nwant:\n%s", sb.String(), want)
 	}
 }
 
 func TestRenderACII(t *testing.T) {
-	out := captureStdout(t, func() { Render(os.Stdout, renderFixture(), "", ASCII) })
+	var sb strings.Builder
+	Render(&sb, renderFixture(), "", ASCII)
 	want := "|-- dir/\n|   `-- file.txt\n|-- a.txt\n`-- link -> target\n"
-	if out != want {
-		t.Errorf("got:\n%s\nwant:\n%s", out, want)
+	if sb.String() != want {
+		t.Errorf("got:\n%s\nwant:\n%s", sb.String(), want)
 	}
 }
 
